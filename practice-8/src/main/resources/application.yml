@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: order-processing-system
+  
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        acknowledge-mode: auto
+        prefetch: 10
+        concurrency: 2
+        max-concurrency: 10
+    template:
+      retry:
+        enabled: true
+        initial-interval: 1000
+        max-attempts: 3
+        multiplier: 2
+
+server:
+  port: 8080
+
+queue:
+  order:
+    exchanges:
+      main: order-exchange
+    queues:
+      urgent: urgent-orders
+      vip: vip-orders
+      standard: standard-orders
+      background: background-tasks
+    routing-keys:
+      urgent: order.urgent
+      vip: order.vip
+      standard: order.standard
+      background: order.background
+  processing:
+    threads: 4
+    batch-size: 100
+    retry-attempts: 3
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  metrics:
+    export:
+      simple:
+        enabled: true
+
+logging:
+  level:
+    root: INFO
+    ua.edu.practice: DEBUG
+    org.springframework.amqp: DEBUG
+
