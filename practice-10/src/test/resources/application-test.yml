@@ -1,0 +1,44 @@
+spring:
+  application:
+    name: enterprise-testing-app-test
+  
+  # Test Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/testdb
+    driver-class-name: org.postgresql.Driver
+    username: test
+    password: test
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  
+  # Security Configuration for Tests
+  security:
+    user:
+      name: admin
+      password: admin
+      roles: ADMIN
+
+# Test Configuration
+test:
+  data:
+    orders:
+      count: 100
+    users:
+      count: 50
+
+# Logging Configuration for Tests
+logging:
+  level:
+    root: WARN
+    ua.edu.practice: INFO
+    org.springframework.security: WARN
+    org.springframework.web: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN

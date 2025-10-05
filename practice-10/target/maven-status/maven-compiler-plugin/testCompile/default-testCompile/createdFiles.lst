@@ -1,0 +1,8 @@
+ua/edu/practice/integration/OrderTestContainersIntegrationTest.class
+ua/edu/practice/integration/OrderRepositoryIntegrationTest.class
+ua/edu/practice/security/AuthorizationTest.class
+ua/edu/practice/service/OrderServiceTest.class
+ua/edu/practice/service/PaymentServiceTest.class
+ua/edu/practice/security/SecurityTest.class
+ua/edu/practice/integration/OrderIntegrationTest.class
+ua/edu/practice/controller/OrderControllerTest.class

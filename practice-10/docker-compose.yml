@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # PostgreSQL для інтеграційних тестів
+  postgres:
+    image: postgres:14
+    container_name: practice10-postgres
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d testdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis для кешування (опціонально)
+  redis:
+    image: redis:7-alpine
+    container_name: practice10-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # JMeter для тестів продуктивності
+  jmeter:
+    image: justb4/jmeter:5.5
+    container_name: practice10-jmeter
+    volumes:
+      - ./src/test/jmeter:/tests
+      - ./target/jmeter/results:/results
+      - ./target/jmeter/reports:/reports
+    command: >
+      -n -t /tests/order-api-test.jmx
+      -l /results/order-api-results.jtl
+      -e -o /reports
+      -JBASE_URL=http://host.docker.internal:8080
+      -JUSERNAME=admin
+      -JPASSWORD=admin
+    depends_on:
+      - postgres
+    networks:
+      - practice10-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  practice10-network:
+    driver: bridge
